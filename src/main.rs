@@ -72,7 +72,7 @@ fn main() {
                 } else {
                     current_problem.user_correct = Some(false);
                 }
-                math_test.problems.push(current_problem)
+                math_test.problems.push(current_problem);
             };
         };
     }
