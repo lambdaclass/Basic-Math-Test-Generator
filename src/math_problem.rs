@@ -32,23 +32,22 @@ impl MathProblem {
         let rand_operation_index = rng.gen_range(0..allowed_operations.len());
         let operation = allowed_operations[rand_operation_index];
         let (expected_answer, ui_string) = match operation {
-            Operation::Addition('+') => (
+            Operation::Addition(ref operator) => (
                 first_number + second_number,
-                format!("{} {} {} = ?", &first_number, '+', &second_number),
+                format!("{} {} {} = ?", &first_number, operator, &second_number),
             ),
-            Operation::Subtraction('-') => (
+            Operation::Subtraction(ref operator) => (
                 first_number - second_number,
-                format!("{} {} {} = ?", &first_number, '-', &second_number),
+                format!("{} {} {} = ?", &first_number, operator, &second_number),
             ),
-            Operation::Multiplication('*') => (
+            Operation::Multiplication(ref operator) => (
                 first_number * second_number,
-                format!("{} {} {} = ?", &first_number, '*', &second_number),
+                format!("{} {} {} = ?", &first_number, operator, &second_number),
             ),
-            Operation::Division('/') => (
+            Operation::Division(ref operator) => (
                 first_number / second_number,
-                format!("{} {} {} = ?", &first_number, '/', &second_number),
+                format!("{} {} {} = ?", &first_number, operator, &second_number),
             ),
-            _ => panic!("unknown operator used somehow"),
         };
 
         MathProblem {
