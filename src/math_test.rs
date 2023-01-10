@@ -2,13 +2,17 @@ use crate::math_problem::{MathProblem, Operation};
 
 pub struct MathTest {
     pub problems: Vec<MathProblem>,
+    pub difficulty: u32,
 }
 
 impl MathTest {
-    pub fn new() -> Self {
+    pub fn new(difficulty: u32) -> Self {
         let problems = vec![];
 
-        MathTest { problems }
+        MathTest {
+            problems,
+            difficulty,
+        }
     }
 
     fn add_correct_answer_to_results(
@@ -62,7 +66,8 @@ impl MathTest {
     ) -> String {
         results.push_str(
             format!(
-                "\nTotal Questions: {}\nTotal Incorrect: {}\nScore: {}",
+                "\nDifficulty: Level {}\nTotal Questions: {}\nTotal Incorrect: {}\nScore: {}",
+                self.difficulty,
                 total_questions,
                 total_incorrect,
                 100 - (100 / total_questions * total_incorrect)

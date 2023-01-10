@@ -33,7 +33,7 @@ struct MathProblemGeneratorInterface {
 fn main() {
     let cli_args = MathProblemGeneratorInterface::parse();
     let number_of_problems_to_generate = cli_args.problems;
-    let mut math_test = MathTest::new();
+    let mut math_test = MathTest::new(cli_args.difficulty);
 
     for _i in 0..number_of_problems_to_generate {
         let mut allowed_operations: Vec<Operation> = vec![];
