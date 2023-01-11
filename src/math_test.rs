@@ -111,13 +111,6 @@ impl MathTest {
                                 &problem.second_number,
                                 &problem.expected_answer,
                             ),
-                        Operation::Division(ref operator) => self.add_correct_answer_to_results(
-                            results,
-                            &problem.first_number,
-                            &operator,
-                            &problem.second_number,
-                            &problem.expected_answer,
-                        ),
                     }
                 } else {
                     total_incorrect += 1;
@@ -142,15 +135,6 @@ impl MathTest {
                                     &user_answer,
                                 ),
                             Operation::Multiplication(ref operator) => self
-                                .add_incorrect_answer_to_results(
-                                    results,
-                                    &problem.first_number,
-                                    &operator,
-                                    &problem.second_number,
-                                    &problem.expected_answer,
-                                    &user_answer,
-                                ),
-                            Operation::Division(ref operator) => self
                                 .add_incorrect_answer_to_results(
                                     results,
                                     &problem.first_number,
@@ -295,24 +279,6 @@ mod tests {
             user_correct: Some(false),
             ui_string: String::from("2 * 2 = ?"),
         };
-        let mock_correct_division_problem = MathProblem {
-            first_number: 4,
-            second_number: 2,
-            operation: Operation::Division('/'),
-            user_answer: Some(2),
-            expected_answer: 2,
-            user_correct: Some(true),
-            ui_string: String::from("4 / 2 = ?"),
-        };
-        let mock_incorrect_division_problem = MathProblem {
-            first_number: 4,
-            second_number: 2,
-            operation: Operation::Division('/'),
-            user_answer: Some(2),
-            expected_answer: 4,
-            user_correct: Some(false),
-            ui_string: String::from("4 / 2 = ?"),
-        };
         let mut mock_math_test = MathTest::new(1);
         mock_math_test.problems = vec![
             mock_correct_addition_problem,
@@ -321,11 +287,9 @@ mod tests {
             mock_incorrect_subtraction_problem,
             mock_correct_multiplication_problem,
             mock_incorrect_multiplication_problem,
-            mock_correct_division_problem,
-            mock_incorrect_division_problem,
         ];
         let results = mock_math_test.get_results();
-        let expected = String::from("###################### RESULTS ######################\n\nCORRECT 1 + 1 = 2\n\nINCORRECT\nUser Answer: 1 + 1 = 1\nExpected: 1 + 1 = 2\n\nCORRECT 2 - 1 = 1\n\nINCORRECT\nUser Answer: 2 - 1 = 2\nExpected: 2 - 1 = 1\n\nCORRECT 2 * 2 = 4\n\nINCORRECT\nUser Answer: 2 * 2 = 2\nExpected: 2 * 2 = 4\n\nCORRECT 4 / 2 = 2\n\nINCORRECT\nUser Answer: 4 / 2 = 2\nExpected: 4 / 2 = 4\n\nDifficulty: Level 1\nTotal Questions: 8\nTotal Incorrect: 4\nScore: 52");
+        let expected = String::from("###################### RESULTS ######################\n\nCORRECT 1 + 1 = 2\n\nINCORRECT\nUser Answer: 1 + 1 = 1\nExpected: 1 + 1 = 2\n\nCORRECT 2 - 1 = 1\n\nINCORRECT\nUser Answer: 2 - 1 = 2\nExpected: 2 - 1 = 1\n\nCORRECT 2 * 2 = 4\n\nINCORRECT\nUser Answer: 2 * 2 = 2\nExpected: 2 * 2 = 4\n\nDifficulty: Level 1\nTotal Questions: 6\nTotal Incorrect: 3\nScore: 52");
 
         assert_eq!(expected, results)
     }

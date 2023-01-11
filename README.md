@@ -48,7 +48,6 @@ Default is only addition problems.
 - `--no-addition` flag has to be used in conjunction with one of the flags below. Removes addition problems.
 - `--subtraction` flag adds subtraction problems.
 - `--multiplication` flag adds multiplication problems.
-- `--division` flag adds multiplication problems.
 
 For Multiplication only.
 ```shell

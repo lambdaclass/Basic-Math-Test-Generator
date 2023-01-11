@@ -26,8 +26,6 @@ struct MathProblemGeneratorInterface {
     subtraction: bool,
     #[arg(short, long, default_value_t = false)]
     multiplication: bool,
-    #[arg(short, long, default_value_t = false)]
-    division: bool,
 }
 
 fn main() {
@@ -47,10 +45,6 @@ fn main() {
 
         if cli_args.multiplication {
             allowed_operations.push(Operation::Multiplication('*'));
-        }
-
-        if cli_args.division {
-            allowed_operations.push(Operation::Division('/'));
         }
 
         if allowed_operations.is_empty() {

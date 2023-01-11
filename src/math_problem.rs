@@ -4,7 +4,6 @@ use rand::{thread_rng, Rng};
 pub enum Operation {
     Addition(char),
     Subtraction(char),
-    Division(char),
     Multiplication(char),
 }
 
@@ -42,10 +41,6 @@ impl MathProblem {
             ),
             Operation::Multiplication(ref operator) => (
                 first_number * second_number,
-                format!("{} {} {} = ?", &first_number, operator, &second_number),
-            ),
-            Operation::Division(ref operator) => (
-                first_number / second_number,
                 format!("{} {} {} = ?", &first_number, operator, &second_number),
             ),
         };
