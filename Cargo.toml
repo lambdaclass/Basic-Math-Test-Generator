@@ -6,7 +6,7 @@ edition = "2021"
 license = "MIT"
 description = "Simple CLI math test with varying difficulty. Geared towards small children for practicing."
 repository = "https://github.com/CCecilia/Basic-Math-Test-Generator"
-keywords = ["cli", "math test", "children", "learning"]
+keywords = ["cli", "math-test", "children", "learning"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [[bin]]
