@@ -1,9 +1,17 @@
 [package]
 name = "basic_math_problem_generator"
+authors = ["christian cecilia <christian.cecilia1@gmail.com>"]
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+description = "Simple CLI math test with varying difficulty. Geared towards small children for practicing."
+repository = "https://github.com/CCecilia/Basic-Math-Test-Generator"
+keywords = ["cli", "math test", "children", "learning"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "math-test"
+path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4.0.32", features = ["derive"] }
