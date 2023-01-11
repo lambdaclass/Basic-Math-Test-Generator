@@ -6,7 +6,7 @@ Generates a basic math test in your terminal. This is mainly geared towards chil
 
 ## Motivation
 
-I'm a father and engineer. I'm currently learning Rust and my children love solving math problems. So it
+I'm a father and engineer. I'm currently learning Rust and my children love solving math problems. So it only makes sense.
 
 ## Installation
 
