@@ -19,7 +19,7 @@ cargo install basic_math_problem_generator
 ### Basic Addition
 
 ```shell
-basic_math_problem_generator
+math-test
 ```
 
 ### Adjusting Number of problems
@@ -27,7 +27,7 @@ basic_math_problem_generator
 Default number of problems is 10. This can be adjusted using the `--problems` flag.
 
 ```shell
-basic_math_problem_generator --problems 20
+math-test --problems 20
 ```
 
 ### Adjusting Difficulty
@@ -38,7 +38,7 @@ Default diffulty is level 1. The diffulty of the test can be adjusted using the 
 - Level 3 - Problems use numbers less than 1000.
 
 ```shell
-basic_math_problem_generator --difficulty 2
+math-test --difficulty 2
 ```
 
 ### Adjusting Operations
@@ -51,10 +51,10 @@ Default is only addition problems.
 
 For Multiplication only.
 ```shell
-basic_math_problem_generator --no-addition --multiplication
+math-test --no-addition --multiplication
 ```
 
 For a mixed of all operations.
 ```shell
-basic_math_problem_generator --subtraction --multiplication --division
+math-test --subtraction --multiplication --division
 ```
