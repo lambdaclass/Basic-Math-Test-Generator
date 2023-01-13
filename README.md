@@ -56,5 +56,5 @@ math-test --no-addition --multiplication
 
 For a mixed of all operations.
 ```shell
-math-test --subtraction --multiplication --division
+math-test --subtraction --multiplication
 ```

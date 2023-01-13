@@ -1,17 +1,23 @@
 use crate::math_problem::{MathProblem, Operation};
+use std::time::Instant;
 
 pub struct MathTest {
     pub problems: Vec<MathProblem>,
     pub difficulty: u32,
+    pub start_time: Instant,
+    pub end_time: Option<Instant>,
 }
 
 impl MathTest {
     pub fn new(difficulty: u32) -> Self {
         let problems = vec![];
+        let start_time = Instant::now();
 
         MathTest {
             problems,
             difficulty,
+            start_time,
+            end_time: None,
         }
     }
 
@@ -58,19 +64,68 @@ impl MathTest {
         results
     }
 
+    fn format_test_duration(&self, seconds: &u64) -> String {
+        const SECS_IN_HOUR: u64 = 3600;
+        const SECS_IN_MIN: u64 = 60;
+
+        fn format_seconds(secs: &u64) -> String {
+            if secs.lt(&10) {
+                format!("0{}", secs)
+            } else {
+                format!("{}", secs)
+            }
+        }
+
+        fn format_mins(mins: &u64) -> String {
+            if mins.lt(&10) {
+                format!("0{}", mins)
+            } else {
+                format!("{}", mins)
+            }
+        }
+
+        fn format_hrs(hrs: &u64) -> String {
+            if hrs.lt(&10) {
+                format!("0{}", hrs)
+            } else {
+                format!("{}", hrs)
+            }
+        }
+
+        if seconds.ge(&SECS_IN_HOUR) {
+            let hrs = seconds / 60 / 60;
+            let mins = seconds / 60 % 60;
+            let secs = mins % 60;
+            format!(
+                "{}:{}:{}",
+                format_hrs(&hrs),
+                format_mins(&mins),
+                format_seconds(&secs)
+            )
+        } else if seconds.ge(&SECS_IN_MIN) {
+            let mins = seconds / 60;
+            let secs = seconds % 60;
+            format!("{}:{}", format_mins(&mins), format_seconds(&secs))
+        } else {
+            format!("{} seconds", format_seconds(seconds))
+        }
+    }
+
     fn add_score_to_results(
         &self,
         mut results: String,
         total_questions: &usize,
         total_incorrect: &usize,
+        total_duration_secs: &u64,
     ) -> String {
         results.push_str(
             format!(
-                "\nDifficulty: Level {}\nTotal Questions: {}\nTotal Incorrect: {}\nScore: {}",
+                "\nDifficulty: Level {}\nTotal Questions: {}\nTotal Incorrect: {}\nScore: {}\nTime: {}",
                 self.difficulty,
                 total_questions,
                 total_incorrect,
-                100 - (100 / total_questions * total_incorrect)
+                100 - (100 / total_questions * total_incorrect),
+                self.format_test_duration(total_duration_secs)
             )
             .as_str(),
         );
@@ -82,6 +137,7 @@ impl MathTest {
         let total_questions = self.problems.len();
         let mut total_incorrect = 0;
         let mut results = String::from("###################### RESULTS ######################\n");
+        self.end_time = Some(Instant::now());
 
         for i in 0..total_questions {
             let problem = &self.problems[i];
@@ -149,7 +205,13 @@ impl MathTest {
             }
         }
 
-        results = self.add_score_to_results(results, &total_questions, &total_incorrect);
+        let mut duration_secs = 0;
+        if let Some(end_time) = self.end_time {
+            duration_secs = end_time.duration_since(self.start_time).as_secs();
+        }
+
+        results =
+            self.add_score_to_results(results, &total_questions, &total_incorrect, &duration_secs);
 
         results
     }
@@ -186,7 +248,7 @@ mod tests {
         let mock_second_number = 1;
         let mock_operator = '+';
         let mock_user_answer = 1;
-        let mock_expected_answer = (mock_first_number + mock_second_number);
+        let mock_expected_answer = mock_first_number + mock_second_number;
         let mock_results = String::new();
         let mock_math_test = MathTest::new(1);
 
@@ -210,14 +272,16 @@ mod tests {
         let mock_difficulty = 1;
         let mock_results = String::new();
         let mock_math_test = MathTest::new(mock_difficulty);
+        let mock_duration = &3733;
 
         let results = mock_math_test.add_score_to_results(
             mock_results,
             &mock_total_questions,
             &mock_total_incorrect,
+            mock_duration,
         );
         let expected = String::from(
-            "\nDifficulty: Level 1\nTotal Questions: 10\nTotal Incorrect: 5\nScore: 50",
+            "\nDifficulty: Level 1\nTotal Questions: 10\nTotal Incorrect: 5\nScore: 50\nTime: 01:02:02",
         );
 
         assert_eq!(expected, results)
@@ -289,7 +353,7 @@ mod tests {
             mock_incorrect_multiplication_problem,
         ];
         let results = mock_math_test.get_results();
-        let expected = String::from("###################### RESULTS ######################\n\nCORRECT 1 + 1 = 2\n\nINCORRECT\nUser Answer: 1 + 1 = 1\nExpected: 1 + 1 = 2\n\nCORRECT 2 - 1 = 1\n\nINCORRECT\nUser Answer: 2 - 1 = 2\nExpected: 2 - 1 = 1\n\nCORRECT 2 * 2 = 4\n\nINCORRECT\nUser Answer: 2 * 2 = 2\nExpected: 2 * 2 = 4\n\nDifficulty: Level 1\nTotal Questions: 6\nTotal Incorrect: 3\nScore: 52");
+        let expected = String::from("###################### RESULTS ######################\n\nCORRECT 1 + 1 = 2\n\nINCORRECT\nUser Answer: 1 + 1 = 1\nExpected: 1 + 1 = 2\n\nCORRECT 2 - 1 = 1\n\nINCORRECT\nUser Answer: 2 - 1 = 2\nExpected: 2 - 1 = 1\n\nCORRECT 2 * 2 = 4\n\nINCORRECT\nUser Answer: 2 * 2 = 2\nExpected: 2 * 2 = 4\n\nDifficulty: Level 1\nTotal Questions: 6\nTotal Incorrect: 3\nScore: 52\nTime: 00 seconds");
 
         assert_eq!(expected, results)
     }
