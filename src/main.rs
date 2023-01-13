@@ -20,11 +20,26 @@ struct MathProblemGeneratorInterface {
         help = "Difficulty 1-3, 1: numbers < 10, 2: numbers < 100, 3: numbers < 1000"
     )]
     difficulty: u32,
-    #[arg(short, long, default_value_t = false)]
+    #[arg(
+        short,
+        long,
+        default_value_t = false,
+        help = "Exclude addition problems"
+    )]
     no_addition: bool,
-    #[arg(short, long, default_value_t = false)]
+    #[arg(
+        short,
+        long,
+        default_value_t = false,
+        help = "Add subtraction problems"
+    )]
     subtraction: bool,
-    #[arg(short, long, default_value_t = false)]
+    #[arg(
+        short,
+        long,
+        default_value_t = false,
+        help = "Add multiplication problems"
+    )]
     multiplication: bool,
 }
 
