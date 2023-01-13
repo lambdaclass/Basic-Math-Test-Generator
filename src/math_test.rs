@@ -92,14 +92,14 @@ impl MathTest {
                         Operation::Addition(ref operator) => self.add_correct_answer_to_results(
                             results,
                             &problem.first_number,
-                            &operator,
+                            operator,
                             &problem.second_number,
                             &problem.expected_answer,
                         ),
                         Operation::Subtraction(ref operator) => self.add_correct_answer_to_results(
                             results,
                             &problem.first_number,
-                            &operator,
+                            operator,
                             &problem.second_number,
                             &problem.expected_answer,
                         ),
@@ -107,7 +107,7 @@ impl MathTest {
                             .add_correct_answer_to_results(
                                 results,
                                 &problem.first_number,
-                                &operator,
+                                operator,
                                 &problem.second_number,
                                 &problem.expected_answer,
                             ),
@@ -120,7 +120,7 @@ impl MathTest {
                                 .add_incorrect_answer_to_results(
                                     results,
                                     &problem.first_number,
-                                    &operator,
+                                    operator,
                                     &problem.second_number,
                                     &problem.expected_answer,
                                     &user_answer,
@@ -129,7 +129,7 @@ impl MathTest {
                                 .add_incorrect_answer_to_results(
                                     results,
                                     &problem.first_number,
-                                    &operator,
+                                    operator,
                                     &problem.second_number,
                                     &problem.expected_answer,
                                     &user_answer,
@@ -138,7 +138,7 @@ impl MathTest {
                                 .add_incorrect_answer_to_results(
                                     results,
                                     &problem.first_number,
-                                    &operator,
+                                    operator,
                                     &problem.second_number,
                                     &problem.expected_answer,
                                     &user_answer,

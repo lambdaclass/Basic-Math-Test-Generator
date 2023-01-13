@@ -58,7 +58,7 @@ fn main() {
         let mut user_input = String::new();
 
         println!("\nProblem:  {}", current_problem.ui_string);
-        if let Ok(_) = stdin().read_line(&mut user_input) {
+        if stdin().read_line(&mut user_input).is_ok() {
             if let Ok(user_answer) = user_input.trim().parse::<u32>() {
                 current_problem.user_answer = Some(user_answer);
                 if user_answer == current_problem.expected_answer {
