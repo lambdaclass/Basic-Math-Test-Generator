@@ -1,3 +1,5 @@
+[![ci](https://github.com/CCecilia/Basic-Math-Test-Generator/actions/workflows/ci.yml/badge.svg)](https://github.com/CCecilia/Basic-Math-Test-Generator/actions/workflows/ci.yml)
+
 # Basic-Math-Test-Generator
 
 ## About

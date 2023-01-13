@@ -1,4 +1,4 @@
-name: SPG-CI
+name: Tests
 
 on:
   push:
