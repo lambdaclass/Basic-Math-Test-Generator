@@ -4,11 +4,11 @@ use math_test::MathTest;
 use std::{
     env::current_dir,
     fs,
-    io::{self, BufWriter, Write},
+    io::{self, BufWriter},
     path,
     process::exit,
 };
-use utils_lib::{delete_file_if_exists, open_file, update_write_buffer};
+use utils_lib::{delete_file_if_exists, open_file_or_create, update_write_buffer};
 
 mod math_problem;
 mod math_test;
@@ -107,11 +107,11 @@ fn main() {
             delete_file_if_exists(&answer_file_path);
         }
 
-        if let Ok(file) = open_file(&question_file_path) {
+        if let Ok(file) = open_file_or_create(&question_file_path) {
             question_file_write_buffer = Some(BufWriter::new(file));
         }
 
-        if let Ok(file) = open_file(&answer_file_path) {
+        if let Ok(file) = open_file_or_create(&answer_file_path) {
             answer_file_write_buffer = Some(BufWriter::new(file));
         }
 
@@ -121,13 +121,18 @@ fn main() {
         );
 
         answer_file_write_buffer =
-            update_write_buffer(answer_file_write_buffer, "Answer Key\n\n\n\n".as_bytes());
+            update_write_buffer(answer_file_write_buffer, "Answer Key\n\n\n".as_bytes());
     }
 
     for i in 1..number_of_problems_to_generate + 1 {
         let problem_number = i;
-        let mut current_problem =
-            MathProblem::new(cli_args.difficulty, &allowed_operations, problem_number);
+        let problem_suffix = if cli_args.paper_test { "__" } else { "?" };
+        let mut current_problem = MathProblem::new(
+            cli_args.difficulty,
+            &allowed_operations,
+            problem_number,
+            problem_suffix,
+        );
         let mut user_input = String::new();
 
         if cli_args.paper_test {
