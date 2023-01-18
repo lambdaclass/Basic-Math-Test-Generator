@@ -15,10 +15,16 @@ pub struct MathProblem {
     pub expected_answer: u32,
     pub user_correct: Option<bool>,
     pub ui_string: String,
+    pub problem_number: u32,
 }
 
 impl MathProblem {
-    pub fn new(difficulty: u32, allowed_operations: &Vec<Operation>) -> Self {
+    pub fn new(
+        difficulty: u32,
+        allowed_operations: &Vec<Operation>,
+        problem_number: u32,
+        problem_suffix: &str,
+    ) -> Self {
         let mut rng = thread_rng();
         let min = 1;
         let max = match difficulty {
@@ -33,15 +39,24 @@ impl MathProblem {
         let (expected_answer, ui_string) = match operation {
             Operation::Addition(ref operator) => (
                 first_number + second_number,
-                format!("{} {} {} = ?", &first_number, operator, &second_number),
+                format!(
+                    "{} {} {} = {}",
+                    &first_number, operator, &second_number, problem_suffix
+                ),
             ),
             Operation::Subtraction(ref operator) => (
                 first_number - second_number,
-                format!("{} {} {} = ?", &first_number, operator, &second_number),
+                format!(
+                    "{} {} {} = {}",
+                    &first_number, operator, &second_number, problem_suffix
+                ),
             ),
             Operation::Multiplication(ref operator) => (
                 first_number * second_number,
-                format!("{} {} {} = ?", &first_number, operator, &second_number),
+                format!(
+                    "{} {} {} = {}",
+                    &first_number, operator, &second_number, problem_suffix
+                ),
             ),
         };
 
@@ -53,6 +68,7 @@ impl MathProblem {
             expected_answer,
             user_correct: None,
             ui_string,
+            problem_number,
         }
     }
 }
