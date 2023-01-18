@@ -15,14 +15,12 @@ pub fn open_file_or_create(file_path: &path::PathBuf) -> io::Result<fs::File> {
 }
 
 pub fn delete_file_if_exists(file_path: &path::PathBuf) {
-    if file_path.exists() {
-        if fs::remove_file(file_path).is_err() {
-            eprintln!(
-                "Failed to removed old file at {}",
-                file_path.to_string_lossy()
-            );
-        };
-    }
+    if file_path.exists() && fs::remove_file(file_path).is_err() {
+        eprintln!(
+            "Failed to removed old file at {}",
+            file_path.to_string_lossy()
+        );
+    };
 }
 
 pub fn update_write_buffer(
