@@ -4,8 +4,8 @@ use math_test::MathTest;
 use std::{
     env::current_dir,
     fs,
-    io::{self, Write},
-    path::{self, PathBuf},
+    io::{self, BufWriter, Write},
+    path,
     process::exit,
 };
 use utils_lib::open_file;
@@ -63,8 +63,8 @@ fn main() {
     let number_of_problems_to_generate = cli_args.problems;
     let mut math_test = MathTest::new(cli_args.difficulty);
     let mut allowed_operations: Vec<Operation> = vec![];
-    let mut question_file_path: Option<PathBuf> = None;
-    let mut answer_file_path: Option<PathBuf> = None;
+    let mut question_file_write_buffer: Option<BufWriter<fs::File>> = None;
+    let mut answer_file_write_buffer: Option<BufWriter<fs::File>> = None;
 
     if !cli_args.no_addition {
         allowed_operations.push(Operation::Addition('+'));
@@ -99,8 +99,13 @@ fn main() {
                     }
                 }
 
-                question_file_path = Some(math_test_dir.join(path::Path::new("questions.txt")));
-                answer_file_path = Some(math_test_dir.join(path::Path::new("answers.txt")));
+                if let Ok(file) = open_file(math_test_dir.join(path::Path::new("questions.txt"))) {
+                    question_file_write_buffer = Some(BufWriter::new(file));
+                }
+
+                if let Ok(file) = open_file(math_test_dir.join(path::Path::new("answers.txt"))) {
+                    answer_file_write_buffer = Some(BufWriter::new(file));
+                }
             }
             Err(e) => {
                 eprintln!(
@@ -111,14 +116,28 @@ fn main() {
             }
         }
 
-        if let Some(question_file_path) = &question_file_path {
-            if let Ok(mut file) = open_file(question_file_path.clone()) {
+        // if let Some(question_file_path) = &question_file_path {
+        question_file_write_buffer = match question_file_write_buffer {
+            Some(mut writer) => {
                 let line = "Name:_________________________________________________\n\n\n\n";
-                if let Err(e) = file.write(line.as_bytes()) {
-                    eprintln!("Failed to write to question file\n{}", e);
+                if let Err(e) = writer.write_all(line.as_bytes()) {
+                    eprintln!("{}", e);
                 }
+                Some(writer)
             }
-        }
+            None => None,
+        };
+
+        answer_file_write_buffer = match answer_file_write_buffer {
+            Some(mut writer) => {
+                let line = "Answer Key\n\n\n\n";
+                if let Err(e) = writer.write_all(line.as_bytes()) {
+                    eprintln!("{}", e);
+                }
+                Some(writer)
+            }
+            None => None,
+        };
     }
 
     for i in 0..number_of_problems_to_generate {
@@ -128,33 +147,35 @@ fn main() {
         let mut user_input = String::new();
 
         if cli_args.paper_test {
-            if let Some(question_file_path) = &question_file_path {
-                println!("{:?}", question_file_path);
-                if let Ok(mut file) = open_file(question_file_path.clone()) {
+            question_file_write_buffer = match question_file_write_buffer {
+                Some(mut writer) => {
                     let line = format!(
-                        "{}. {}\n",
+                        "{}. {}\n\n\n\n",
                         &current_problem.problem_number.to_string(),
                         &current_problem.ui_string
                     );
-
-                    if let Err(e) = file.write(line.as_bytes()) {
-                        eprintln!("Failed to write to question file\n{}", e);
+                    if let Err(e) = writer.write_all(line.as_bytes()) {
+                        eprintln!("{}", e);
                     }
+                    Some(writer)
                 }
-            }
+                None => None,
+            };
 
-            if let Some(answer_file_path) = &answer_file_path {
-                if let Ok(mut file) = open_file(answer_file_path.clone()) {
+            answer_file_write_buffer = match answer_file_write_buffer {
+                Some(mut writer) => {
                     let line = format!(
-                        "{}. {}\n",
+                        "{}. {}\n\n",
                         &current_problem.problem_number.to_string(),
                         &current_problem.expected_answer
                     );
-                    if let Err(e) = file.write(line.as_bytes()) {
-                        eprintln!("Failed to write to question file\n{}", e);
+                    if let Err(e) = writer.write_all(line.as_bytes()) {
+                        eprintln!("{}", e);
                     }
+                    Some(writer)
                 }
-            }
+                None => None,
+            };
         } else {
             println!("\nProblem:  {}", current_problem.ui_string);
             if io::stdin().read_line(&mut user_input).is_ok() {
