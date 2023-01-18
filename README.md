@@ -4,7 +4,7 @@
 
 ## About
 
-Generates a basic math test in your terminal. This is mainly geared towards children to help them practice. The numbers used in each problem are generated at random. The difficulty can be adjusted using the `--difficulty` flag. The types of operations used in the generated problem can also be adjusted using the flags.
+Generates a basic math test in your terminal or generated into a text file with a answer key if you want a paper version. This is mainly geared towards children to help them practice. The numbers used in each problem are generated at random. The difficulty can be adjusted using the `--difficulty` flag. The types of operations used in the generated problem can also be adjusted using the flags.
 
 ## Motivation
 
@@ -59,4 +59,12 @@ math-test --no-addition --multiplication
 For a mixed of all operations.
 ```shell
 math-test --subtraction --multiplication
+```
+
+### Paper Test
+
+To create a paper test version with a answer key use the following command below. This will create directory name `Math-Test` in whatever directory you call the command from and will contain two files `questions.txt` and `answers.txt`. The problems will be numbered to easily correlate the  answers to the questions.
+
+```shell
+math-test --paper-test
 ```

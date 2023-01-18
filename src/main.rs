@@ -8,7 +8,7 @@ use std::{
     path,
     process::exit,
 };
-use utils_lib::open_file;
+use utils_lib::{delete_file_if_exists, open_file, update_write_buffer};
 
 mod math_problem;
 mod math_test;
@@ -84,98 +84,72 @@ fn main() {
     }
 
     if cli_args.paper_test {
-        match current_dir() {
-            Ok(cwd) => {
-                println!("cwd {:?}", cwd);
-                let math_test_dir = cwd.join(path::Path::new("math-problems"));
+        let Ok(cwd) = current_dir() else {
+            eprintln!(
+                "Failed to create dir for question and answer files"
+            );
+            exit(1)
+        };
 
-                println!("Math testDir {:?}", math_test_dir);
+        let math_test_dir = cwd.join(path::Path::new("Math-Test"));
+        let question_file_path = math_test_dir.join(path::Path::new("questions.txt"));
+        let answer_file_path = math_test_dir.join(path::Path::new("answers.txt"));
 
-                if !math_test_dir.exists() {
-                    let create_dir_result = fs::create_dir(math_test_dir.as_path());
-                    if let Err(e) = create_dir_result {
-                        eprintln!("Failed to create dir for question and answer files\n{}", e);
-                        exit(1);
-                    }
-                }
+        println!("Math testDir {:?}", math_test_dir);
 
-                if let Ok(file) = open_file(math_test_dir.join(path::Path::new("questions.txt"))) {
-                    question_file_write_buffer = Some(BufWriter::new(file));
-                }
-
-                if let Ok(file) = open_file(math_test_dir.join(path::Path::new("answers.txt"))) {
-                    answer_file_write_buffer = Some(BufWriter::new(file));
-                }
+        if !math_test_dir.exists() {
+            if fs::create_dir(math_test_dir.as_path()).is_err() {
+                eprintln!("Failed to create dir for question and answer files");
+                exit(1);
             }
-            Err(e) => {
-                eprintln!(
-                    "Failed to create dir for question and answer files\n{}",
-                    e.to_string()
-                );
-                exit(1)
-            }
+        } else {
+            delete_file_if_exists(&question_file_path);
+            delete_file_if_exists(&answer_file_path);
         }
 
-        // if let Some(question_file_path) = &question_file_path {
-        question_file_write_buffer = match question_file_write_buffer {
-            Some(mut writer) => {
-                let line = "Name:_________________________________________________\n\n\n\n";
-                if let Err(e) = writer.write_all(line.as_bytes()) {
-                    eprintln!("{}", e);
-                }
-                Some(writer)
-            }
-            None => None,
-        };
+        if let Ok(file) = open_file(&question_file_path) {
+            question_file_write_buffer = Some(BufWriter::new(file));
+        }
 
-        answer_file_write_buffer = match answer_file_write_buffer {
-            Some(mut writer) => {
-                let line = "Answer Key\n\n\n\n";
-                if let Err(e) = writer.write_all(line.as_bytes()) {
-                    eprintln!("{}", e);
-                }
-                Some(writer)
-            }
-            None => None,
-        };
+        if let Ok(file) = open_file(&answer_file_path) {
+            answer_file_write_buffer = Some(BufWriter::new(file));
+        }
+
+        question_file_write_buffer = update_write_buffer(
+            question_file_write_buffer,
+            "Name:_________________________________________________\n\n\n\n".as_bytes(),
+        );
+
+        answer_file_write_buffer =
+            update_write_buffer(answer_file_write_buffer, "Answer Key\n\n\n\n".as_bytes());
     }
 
-    for i in 0..number_of_problems_to_generate {
-        let problem_number = i + 1;
+    for i in 1..number_of_problems_to_generate + 1 {
+        let problem_number = i;
         let mut current_problem =
             MathProblem::new(cli_args.difficulty, &allowed_operations, problem_number);
         let mut user_input = String::new();
 
         if cli_args.paper_test {
-            question_file_write_buffer = match question_file_write_buffer {
-                Some(mut writer) => {
-                    let line = format!(
-                        "{}. {}\n\n\n\n",
-                        &current_problem.problem_number.to_string(),
-                        &current_problem.ui_string
-                    );
-                    if let Err(e) = writer.write_all(line.as_bytes()) {
-                        eprintln!("{}", e);
-                    }
-                    Some(writer)
-                }
-                None => None,
-            };
+            question_file_write_buffer = update_write_buffer(
+                question_file_write_buffer,
+                format!(
+                    "{}. {}\n\n\n\n",
+                    &current_problem.problem_number.to_string(),
+                    &current_problem.ui_string
+                )
+                .as_bytes(),
+            );
 
-            answer_file_write_buffer = match answer_file_write_buffer {
-                Some(mut writer) => {
-                    let line = format!(
-                        "{}. {}\n\n",
-                        &current_problem.problem_number.to_string(),
-                        &current_problem.expected_answer
-                    );
-                    if let Err(e) = writer.write_all(line.as_bytes()) {
-                        eprintln!("{}", e);
-                    }
-                    Some(writer)
-                }
-                None => None,
-            };
+            answer_file_write_buffer = update_write_buffer(
+                answer_file_write_buffer,
+                format!(
+                    "{}. {}\n\n",
+                    &current_problem.problem_number.to_string(),
+                    &current_problem.expected_answer
+                )
+                .as_bytes(),
+            );
         } else {
             println!("\nProblem:  {}", current_problem.ui_string);
             if io::stdin().read_line(&mut user_input).is_ok() {
