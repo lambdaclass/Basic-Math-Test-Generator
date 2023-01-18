@@ -297,6 +297,7 @@ mod tests {
             expected_answer: 2,
             user_correct: Some(true),
             ui_string: String::from("1 + 1 = ?"),
+            problem_number: 1,
         };
         let mock_incorrect_addition_problem = MathProblem {
             first_number: 1,
@@ -306,6 +307,7 @@ mod tests {
             expected_answer: 2,
             user_correct: Some(false),
             ui_string: String::from("1 + 1 = ?"),
+            problem_number: 2,
         };
         let mock_correct_subtraction_problem = MathProblem {
             first_number: 2,
@@ -315,6 +317,7 @@ mod tests {
             expected_answer: 1,
             user_correct: Some(true),
             ui_string: String::from("2 - 1 = ?"),
+            problem_number: 3,
         };
         let mock_incorrect_subtraction_problem = MathProblem {
             first_number: 2,
@@ -324,6 +327,7 @@ mod tests {
             expected_answer: 1,
             user_correct: Some(false),
             ui_string: String::from("2 - 1 = ?"),
+            problem_number: 4,
         };
         let mock_correct_multiplication_problem = MathProblem {
             first_number: 2,
@@ -333,6 +337,7 @@ mod tests {
             expected_answer: 4,
             user_correct: Some(true),
             ui_string: String::from("2 * 2 = ?"),
+            problem_number: 5,
         };
         let mock_incorrect_multiplication_problem = MathProblem {
             first_number: 2,
@@ -342,6 +347,7 @@ mod tests {
             expected_answer: 4,
             user_correct: Some(false),
             ui_string: String::from("2 * 2 = ?"),
+            problem_number: 6,
         };
         let mut mock_math_test = MathTest::new(1);
         mock_math_test.problems = vec![
