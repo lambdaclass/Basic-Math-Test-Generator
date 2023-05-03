@@ -59,7 +59,7 @@ struct MathProblemGeneratorInterface {
 }
 
 fn main() {
-    let cli_args = MathProblemGeneratorInterface::parse();
+    /*let cli_args = MathProblemGeneratorInterface::parse();
     let number_of_problems_to_generate = cli_args.problems;
     let mut math_test = MathTest::new(cli_args.difficulty);
     let mut allowed_operations: Vec<Operation> = vec![];
@@ -174,4 +174,8 @@ fn main() {
     if !cli_args.paper_test {
         println!("{}", math_test.get_results())
     }
+    */
+
+    let operations: Vec<Operation> = Vec::new();
+    MathProblem::new(1, &operations, 1, "hola");
 }
